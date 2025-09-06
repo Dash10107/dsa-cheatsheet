@@ -57,7 +57,8 @@ class MedianFinder:
 
 # Common heap operations
 def find_kth_largest(nums, k):
-    pass
+    """Find the kth largest element in an array (LeetCode 215)."""
+    return heapq.nlargest(k, nums)[-1]
 
 def merge_sorted_arrays(arrays):
     pass

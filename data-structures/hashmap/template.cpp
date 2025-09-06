@@ -58,28 +58,61 @@ public:
 
 // Common hashmap operations
 vector<int> twoSum(vector<int>& nums, int target) {
-    // TODO: Implement two sum using hashmap
+    unordered_map<int, int> map;
+    for (int i = 0; i < nums.size(); ++i) {
+        int complement = target - nums[i];
+        if (map.count(complement)) {
+            return {map[complement], i};
+        }
+        map[nums[i]] = i;
+    }
     return {};
 }
 
 vector<vector<string>> groupAnagrams(vector<string>& strs) {
-    // TODO: Implement group anagrams
-    return {};
+    unordered_map<string, vector<string>> map;
+    for (string& s : strs) {
+        string key = s;
+        sort(key.begin(), key.end());
+        map[key].push_back(s);
+    }
+    vector<vector<string>> result;
+    for (auto& p : map) {
+        result.push_back(p.second);
+    }
+    return result;
 }
 
 int longestConsecutive(vector<int>& nums) {
-    // TODO: Implement longest consecutive sequence
-    return 0;
+    unordered_set<int> set(nums.begin(), nums.end());
+    int longest = 0;
+    for (int num : set) {
+        if (!set.count(num - 1)) {
+            int current = num;
+            int streak = 1;
+            while (set.count(current + 1)) {
+                current++;
+                streak++;
+            }
+            longest = max(longest, streak);
+        }
+    }
+    return longest;
 }
 
 bool containsDuplicate(vector<int>& nums) {
-    // TODO: Implement duplicate check
+    unordered_set<int> set;
+    for (int num : nums) {
+        if (!set.insert(num).second) return true;
+    }
     return false;
 }
 
 vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
-    // TODO: Implement array intersection
-    return {};
+    unordered_set<int> set1(nums1.begin(), nums1.end());
+    unordered_set<int> result;
+    for (int n : nums2) if (set1.count(n)) result.insert(n);
+    return vector<int>(result.begin(), result.end());
 }
 
 int main() {

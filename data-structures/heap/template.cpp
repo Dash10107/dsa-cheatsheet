@@ -153,28 +153,77 @@ public:
 
 // Common heap operations
 int findKthLargest(vector<int>& nums, int k) {
-    // TODO: Implement kth largest element
-    return 0;
+    priority_queue<int, vector<int>, greater<int>> minHeap;
+    for (int num : nums) {
+        minHeap.push(num);
+        if (minHeap.size() > k) minHeap.pop();
+    }
+    return minHeap.top();
 }
 
 vector<int> mergeSortedArrays(vector<vector<int>>& arrays) {
-    // TODO: Implement merge k sorted arrays
-    return {};
+    typedef tuple<int, int, int> T; // value, array index, element index
+    priority_queue<T, vector<T>, greater<T>> pq;
+    int total = 0;
+    for (int i = 0; i < arrays.size(); ++i) {
+        if (!arrays[i].empty()) {
+            pq.emplace(arrays[i][0], i, 0);
+            total += arrays[i].size();
+        }
+    }
+    vector<int> result;
+    while (!pq.empty()) {
+        auto [val, arrIdx, elemIdx] = pq.top(); pq.pop();
+        result.push_back(val);
+        if (elemIdx + 1 < arrays[arrIdx].size()) {
+            pq.emplace(arrays[arrIdx][elemIdx + 1], arrIdx, elemIdx + 1);
+        }
+    }
+    return result;
 }
 
 vector<int> topKFrequent(vector<int>& nums, int k) {
-    // TODO: Implement top k frequent elements
-    return {};
+    unordered_map<int, int> freq;
+    for (int num : nums) freq[num]++;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    for (auto& [num, count] : freq) {
+        pq.emplace(count, num);
+        if (pq.size() > k) pq.pop();
+    }
+    vector<int> res;
+    while (!pq.empty()) {
+        res.push_back(pq.top().second);
+        pq.pop();
+    }
+    reverse(res.begin(), res.end());
+    return res;
 }
 
 int kthSmallestInMatrix(vector<vector<int>>& matrix, int k) {
-    // TODO: Implement kth smallest in sorted matrix
-    return 0;
+    typedef tuple<int, int, int> T; // value, row, col
+    int n = matrix.size();
+    priority_queue<T, vector<T>, greater<T>> pq;
+    for (int i = 0; i < n; ++i) pq.emplace(matrix[i][0], i, 0);
+    int count = 0;
+    while (!pq.empty()) {
+        auto [val, row, col] = pq.top(); pq.pop();
+        count++;
+        if (count == k) return val;
+        if (col + 1 < n) pq.emplace(matrix[row][col + 1], row, col + 1);
+    }
+    return -1;
 }
 
 vector<int> slidingWindowMaximum(vector<int>& nums, int k) {
-    // TODO: Implement sliding window maximum
-    return {};
+    deque<int> dq;
+    vector<int> res;
+    for (int i = 0; i < nums.size(); ++i) {
+        while (!dq.empty() && dq.front() <= i - k) dq.pop_front();
+        while (!dq.empty() && nums[dq.back()] < nums[i]) dq.pop_back();
+        dq.push_back(i);
+        if (i >= k - 1) res.push_back(nums[dq.front()]);
+    }
+    return res;
 }
 
 int main() {
