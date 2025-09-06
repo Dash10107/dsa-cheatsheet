@@ -256,14 +256,34 @@ public class Template {
     }
     
     // Common monotonic stack problems
+    // LeetCode 503: Next Greater Element II (circular array)
     public static int[] nextGreaterElements(int[] nums) {
-        // TODO: Implement next greater elements II
-        return new int[0];
+        int n = nums.length;
+        int[] result = new int[n];
+        Arrays.fill(result, -1);
+        Deque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < 2 * n; i++) {
+            int num = nums[i % n];
+            while (!stack.isEmpty() && nums[stack.peek()] < num) {
+                result[stack.pop()] = num;
+            }
+            if (i < n) stack.push(i);
+        }
+        return result;
     }
-    
+
+    // LeetCode 85: Maximal Rectangle
     public static int maximalRectangle(char[][] matrix) {
-        // TODO: Implement maximal rectangle
-        return 0;
+        if (matrix.length == 0 || matrix[0].length == 0) return 0;
+        int maxArea = 0;
+        int[] heights = new int[matrix[0].length];
+        for (char[] row : matrix) {
+            for (int i = 0; i < row.length; i++) {
+                heights[i] = row[i] == '1' ? heights[i] + 1 : 0;
+            }
+            maxArea = Math.max(maxArea, largestRectangleArea(heights));
+        }
+        return maxArea;
     }
     
     public static void main(String[] args) {

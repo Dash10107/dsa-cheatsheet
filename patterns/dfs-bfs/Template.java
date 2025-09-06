@@ -221,28 +221,103 @@ public class Template {
     
     // Common DFS/BFS problems
     public static boolean hasPath(int[][] graph, int start, int end) {
-        // TODO: Implement path finding
+        boolean[] visited = new boolean[graph.length];
+        return dfsPath(graph, start, end, visited);
+    }
+
+    private static boolean dfsPath(int[][] graph, int current, int end, boolean[] visited) {
+        if (current == end) return true;
+        visited[current] = true;
+        for (int neighbor : graph[current]) {
+            if (!visited[neighbor] && dfsPath(graph, neighbor, end, visited)) return true;
+        }
         return false;
     }
-    
+
     public static List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-        // TODO: Implement all paths from source to target
-        return new ArrayList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        dfsAllPaths(graph, 0, graph.length - 1, path, result);
+        return result;
     }
-    
+
+    private static void dfsAllPaths(int[][] graph, int node, int target, List<Integer> path, List<List<Integer>> result) {
+        path.add(node);
+        if (node == target) {
+            result.add(new ArrayList<>(path));
+        } else {
+            for (int neighbor : graph[node]) {
+                dfsAllPaths(graph, neighbor, target, path, result);
+            }
+        }
+        path.remove(path.size() - 1);
+    }
+
     public static int shortestPathBinaryMatrix(int[][] grid) {
-        // TODO: Implement shortest path in binary matrix
+        int n = grid.length;
+        if (grid[0][0] != 0 || grid[n - 1][n - 1] != 0) return -1;
+        int[][] dirs = {{0,1},{1,0},{0,-1},{-1,0},{1,1},{-1,-1},{1,-1},{-1,1}};
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{0,0,1});
+        grid[0][0] = 1;
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int r = curr[0], c = curr[1], d = curr[2];
+            if (r == n - 1 && c == n - 1) return d;
+            for (int[] dir : dirs) {
+                int nr = r + dir[0], nc = c + dir[1];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n && grid[nr][nc] == 0) {
+                    queue.offer(new int[]{nr, nc, d + 1});
+                    grid[nr][nc] = 1;
+                }
+            }
+        }
         return -1;
     }
-    
+
     public static boolean canFinish(int numCourses, int[][] prerequisites) {
-        // TODO: Implement course schedule
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+        for (int[] pre : prerequisites) graph.get(pre[1]).add(pre[0]);
+        int[] state = new int[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(graph, i, state)) return false;
+        }
+        return true;
+    }
+
+    private static boolean hasCycle(List<List<Integer>> graph, int node, int[] state) {
+        if (state[node] == 1) return true;
+        if (state[node] == 2) return false;
+        state[node] = 1;
+        for (int neighbor : graph.get(node)) {
+            if (hasCycle(graph, neighbor, state)) return true;
+        }
+        state[node] = 2;
         return false;
     }
-    
+
     public static int[] findOrder(int numCourses, int[][] prerequisites) {
-        // TODO: Implement course schedule II
-        return new int[0];
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+        int[] indegree = new int[numCourses];
+        for (int[] pre : prerequisites) {
+            graph.get(pre[1]).add(pre[0]);
+            indegree[pre[0]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) if (indegree[i] == 0) queue.offer(i);
+        int[] order = new int[numCourses];
+        int idx = 0;
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            order[idx++] = node;
+            for (int neighbor : graph.get(node)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) queue.offer(neighbor);
+            }
+        }
+        return idx == numCourses ? order : new int[0];
     }
     
     public static void main(String[] args) {

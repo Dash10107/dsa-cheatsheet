@@ -248,14 +248,48 @@ public:
 };
 
 // Common monotonic problems
+// Returns an array of the minimum of each subarray (for demonstration, not a standard problem)
 vector<int> sumOfSubarrayMinimums(vector<int>& arr) {
-    // TODO: Implement sum of subarray minimums
-    return {};
+    int n = arr.size();
+    vector<int> result(n, 0);
+    for (int i = 0; i < n; i++) {
+        int minVal = arr[i];
+        for (int j = i; j < n; j++) {
+            minVal = min(minVal, arr[j]);
+            result[i] += minVal;
+        }
+    }
+    return result;
 }
 
+// LeetCode 907: Sum of Subarray Minimums
 int sumSubarrayMins(vector<int>& arr) {
-    // TODO: Implement sum subarray mins
-    return 0;
+    int n = arr.size();
+    vector<int> left(n), right(n);
+    stack<int> st;
+    // Previous less element
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && arr[st.top()] > arr[i]) {
+            st.pop();
+        }
+        left[i] = st.empty() ? -1 : st.top();
+        st.push(i);
+    }
+    while (!st.empty()) st.pop();
+    // Next less element
+    for (int i = n - 1; i >= 0; i--) {
+        while (!st.empty() && arr[st.top()] >= arr[i]) {
+            st.pop();
+        }
+        right[i] = st.empty() ? n : st.top();
+        st.push(i);
+    }
+    long long result = 0;
+    int MOD = 1e9 + 7;
+    for (int i = 0; i < n; i++) {
+        result = (result + (long long)arr[i] * (i - left[i]) * (right[i] - i)) % MOD;
+    }
+    return (int)result;
 }
 
 int main() {

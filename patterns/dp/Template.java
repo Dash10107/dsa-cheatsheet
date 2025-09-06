@@ -223,18 +223,49 @@ public class Template {
     
     // Common DP problems
     public static int longestPalindromeSubseq(String s) {
-        // TODO: Implement longest palindromic subsequence
-        return 0;
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i][i] = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = 2 + dp[i + 1][j - 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[0][n - 1];
     }
-    
+
     public static int numDistinct(String s, String t) {
-        // TODO: Implement distinct subsequences
-        return 0;
+        int m = s.length(), n = t.length();
+        int[][] dp = new int[m + 1][n + 1];
+        for (int i = 0; i <= m; i++) dp[i][0] = 1;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[m][n];
     }
-    
+
     public static int minPathSum(int[][] grid) {
-        // TODO: Implement minimum path sum
-        return 0;
+        int m = grid.length, n = grid[0].length;
+        int[][] dp = new int[m][n];
+        dp[0][0] = grid[0][0];
+        for (int i = 1; i < m; i++) dp[i][0] = dp[i - 1][0] + grid[i][0];
+        for (int j = 1; j < n; j++) dp[0][j] = dp[0][j - 1] + grid[0][j];
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+        return dp[m - 1][n - 1];
     }
     
     public static void main(String[] args) {

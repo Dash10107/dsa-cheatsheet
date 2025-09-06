@@ -229,28 +229,99 @@ public:
 
 // Common DFS/BFS problems
 bool hasPath(vector<vector<int>>& graph, int start, int end) {
-    // TODO: Implement path finding
+    vector<bool> visited(graph.size(), false);
+    return dfsPath(graph, start, end, visited);
+}
+
+bool dfsPath(vector<vector<int>>& graph, int current, int end, vector<bool>& visited) {
+    if (current == end) return true;
+    visited[current] = true;
+    for (int neighbor : graph[current]) {
+        if (!visited[neighbor] && dfsPath(graph, neighbor, end, visited)) return true;
+    }
     return false;
+}
+
+void dfsAllPaths(vector<vector<int>>& graph, int node, int target, vector<int>& path, vector<vector<int>>& result) {
+    path.push_back(node);
+    if (node == target) {
+        result.push_back(path);
+    } else {
+        for (int neighbor : graph[node]) {
+            dfsAllPaths(graph, neighbor, target, path, result);
+        }
+    }
+    path.pop_back();
 }
 
 vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
-    // TODO: Implement all paths from source to target
-    return {};
+    vector<vector<int>> result;
+    vector<int> path;
+    dfsAllPaths(graph, 0, graph.size() - 1, path, result);
+    return result;
 }
 
 int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
-    // TODO: Implement shortest path in binary matrix
+    int n = grid.size();
+    if (grid[0][0] != 0 || grid[n - 1][n - 1] != 0) return -1;
+    vector<vector<int>> dirs = {{0,1},{1,0},{0,-1},{-1,0},{1,1},{-1,-1},{1,-1},{-1,1}};
+    queue<tuple<int,int,int>> q;
+    q.push({0,0,1});
+    grid[0][0] = 1;
+    while (!q.empty()) {
+        auto [r, c, d] = q.front(); q.pop();
+        if (r == n - 1 && c == n - 1) return d;
+        for (auto& dir : dirs) {
+            int nr = r + dir[0], nc = c + dir[1];
+            if (nr >= 0 && nr < n && nc >= 0 && nc < n && grid[nr][nc] == 0) {
+                q.push({nr, nc, d + 1});
+                grid[nr][nc] = 1;
+            }
+        }
+    }
     return -1;
 }
 
-bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-    // TODO: Implement course schedule
+bool hasCycle(vector<vector<int>>& graph, int node, vector<int>& state) {
+    if (state[node] == 1) return true;
+    if (state[node] == 2) return false;
+    state[node] = 1;
+    for (int neighbor : graph[node]) {
+        if (hasCycle(graph, neighbor, state)) return true;
+    }
+    state[node] = 2;
     return false;
 }
 
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> graph(numCourses);
+    for (auto& pre : prerequisites) graph[pre[1]].push_back(pre[0]);
+    vector<int> state(numCourses, 0);
+    for (int i = 0; i < numCourses; i++) {
+        if (hasCycle(graph, i, state)) return false;
+    }
+    return true;
+}
+
 vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
-    // TODO: Implement course schedule II
-    return {};
+    vector<vector<int>> graph(numCourses);
+    vector<int> indegree(numCourses, 0);
+    for (auto& pre : prerequisites) {
+        graph[pre[1]].push_back(pre[0]);
+        indegree[pre[0]]++;
+    }
+    queue<int> q;
+    for (int i = 0; i < numCourses; i++) if (indegree[i] == 0) q.push(i);
+    vector<int> order;
+    while (!q.empty()) {
+        int node = q.front(); q.pop();
+        order.push_back(node);
+        for (int neighbor : graph[node]) {
+            indegree[neighbor]--;
+            if (indegree[neighbor] == 0) q.push(neighbor);
+        }
+    }
+    return order.size() == numCourses ? order : vector<int>();
 }
 
 int main() {

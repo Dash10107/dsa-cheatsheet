@@ -257,14 +257,47 @@ public:
 };
 
 // Common monotonic stack problems
+// LeetCode 503: Next Greater Element II (circular array)
 vector<int> nextGreaterElements(vector<int>& nums) {
-    // TODO: Implement next greater elements II
-    return {};
+    int n = nums.size();
+    vector<int> result(n, -1);
+    stack<int> st;
+    for (int i = 0; i < 2 * n; i++) {
+        int num = nums[i % n];
+        while (!st.empty() && nums[st.top()] < num) {
+            result[st.top()] = num;
+            st.pop();
+        }
+        if (i < n) st.push(i);
+    }
+    return result;
 }
 
+// LeetCode 85: Maximal Rectangle
 int maximalRectangle(vector<vector<char>>& matrix) {
-    // TODO: Implement maximal rectangle
-    return 0;
+    if (matrix.empty() || matrix[0].empty()) return 0;
+    int maxArea = 0;
+    int cols = matrix[0].size();
+    vector<int> heights(cols, 0);
+    for (const auto& row : matrix) {
+        for (int i = 0; i < cols; i++) {
+            heights[i] = row[i] == '1' ? heights[i] + 1 : 0;
+        }
+        // Use largestRectangleArea from above
+        stack<int> st;
+        int n = heights.size();
+        for (int i = 0; i <= n; i++) {
+            int h = (i == n) ? 0 : heights[i];
+            while (!st.empty() && heights[st.top()] > h) {
+                int height = heights[st.top()];
+                st.pop();
+                int width = st.empty() ? i : i - st.top() - 1;
+                maxArea = max(maxArea, height * width);
+            }
+            st.push(i);
+        }
+    }
+    return maxArea;
 }
 
 int main() {

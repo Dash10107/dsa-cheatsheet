@@ -241,13 +241,32 @@ public:
 
 // Common greedy problems
 int eraseOverlapIntervals(vector<vector<int>>& intervals) {
-    // TODO: Implement erase overlapping intervals
-    return 0;
+    if (intervals.empty()) return 0;
+    sort(intervals.begin(), intervals.end(), [](const vector<int>& a, const vector<int>& b) {
+        return a[1] < b[1];
+    });
+    int count = 1;
+    int end = intervals[0][1];
+    for (int i = 1; i < intervals.size(); i++) {
+        if (intervals[i][0] >= end) {
+            count++;
+            end = intervals[i][1];
+        }
+    }
+    return intervals.size() - count;
 }
 
 int findContentChildren(vector<int>& g, vector<int>& s) {
-    // TODO: Implement assign cookies
-    return 0;
+    sort(g.begin(), g.end());
+    sort(s.begin(), s.end());
+    int i = 0, j = 0;
+    while (i < g.size() && j < s.size()) {
+        if (s[j] >= g[i]) {
+            i++;
+        }
+        j++;
+    }
+    return i;
 }
 
 int main() {

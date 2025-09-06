@@ -264,14 +264,50 @@ public class Template {
     }
     
     // Common monotonic problems
+    // Returns an array of the minimum of each subarray (for demonstration, not a standard problem)
     public static int[] sumOfSubarrayMinimums(int[] arr) {
-        // TODO: Implement sum of subarray minimums
-        return new int[0];
+        // For each subarray, find the minimum and sum them up (brute force, for demonstration)
+        int n = arr.length;
+        int[] result = new int[n];
+        for (int i = 0; i < n; i++) {
+            int minVal = arr[i];
+            for (int j = i; j < n; j++) {
+                minVal = Math.min(minVal, arr[j]);
+                result[i] += minVal;
+            }
+        }
+        return result;
     }
-    
+
+    // LeetCode 907: Sum of Subarray Minimums
     public static int sumSubarrayMins(int[] arr) {
-        // TODO: Implement sum subarray mins
-        return 0;
+        int n = arr.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        Deque<Integer> stack = new ArrayDeque<>();
+        // Previous less element
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && arr[stack.peek()] > arr[i]) {
+                stack.pop();
+            }
+            left[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(i);
+        }
+        stack.clear();
+        // Next less element
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && arr[stack.peek()] >= arr[i]) {
+                stack.pop();
+            }
+            right[i] = stack.isEmpty() ? n : stack.peek();
+            stack.push(i);
+        }
+        long result = 0;
+        int MOD = 1_000_000_007;
+        for (int i = 0; i < n; i++) {
+            result = (result + (long) arr[i] * (i - left[i]) * (right[i] - i)) % MOD;
+        }
+        return (int) result;
     }
     
     public static void main(String[] args) {
