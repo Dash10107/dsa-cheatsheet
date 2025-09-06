@@ -24,4 +24,4 @@ For optimization problems with overlapping subproblems and optimal substructure.
 - [Word Break II](https://leetcode.com/problems/word-break-ii/)
 - [Edit Distance](https://leetcode.com/problems/edit-distance/)
 
-💬 **Discussion**: [LeetCode Dynamic Programming Guide](https://leetcode.com/discuss/general-discussion/657507/)
+💬 **Discussion**: [LeetCode Dynamic Programming Guide](https://leetcode.com/discuss/post/662866/DP-for-Beginners-Problems-or-Patterns-or-Sample-Solutions/)
