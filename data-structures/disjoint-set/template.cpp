@@ -60,18 +60,34 @@ public:
 
 // Common disjoint set operations
 int countComponents(int n, vector<vector<int>>& edges) {
-    // TODO: Implement component counting
-    return 0;
+    DisjointSet ds(n);
+    for (auto& edge : edges) {
+        ds.unionSets(edge[0], edge[1]);
+    }
+    return ds.getComponents();
 }
 
 bool validTree(int n, vector<vector<int>>& edges) {
-    // TODO: Implement valid tree check
-    return false;
+    if (edges.size() != n - 1) return false;
+    DisjointSet ds(n);
+    for (auto& edge : edges) {
+        if (ds.connected(edge[0], edge[1])) return false;
+        ds.unionSets(edge[0], edge[1]);
+    }
+    return ds.getComponents() == 1;
 }
 
 int findCircleNum(vector<vector<int>>& isConnected) {
-    // TODO: Implement number of provinces
-    return 0;
+    int n = isConnected.size();
+    DisjointSet ds(n);
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            if (isConnected[i][j] == 1) {
+                ds.unionSets(i, j);
+            }
+        }
+    }
+    return ds.getComponents();
 }
 
 int main() {

@@ -125,19 +125,31 @@ public:
 };
 
 // Common BST operations
+TreeNode* sortedArrayToBSTHelper(vector<int>& nums, int left, int right) {
+    if (left > right) return nullptr;
+    int mid = left + (right - left) / 2;
+    TreeNode* node = new TreeNode(nums[mid]);
+    node->left = sortedArrayToBSTHelper(nums, left, mid - 1);
+    node->right = sortedArrayToBSTHelper(nums, mid + 1, right);
+    return node;
+}
 TreeNode* sortedArrayToBST(vector<int>& nums) {
-    // TODO: Implement sorted array to BST
-    return nullptr;
+    return sortedArrayToBSTHelper(nums, 0, nums.size() - 1);
 }
 
 TreeNode* searchBST(TreeNode* root, int val) {
-    // TODO: Implement BST search
-    return nullptr;
+    if (!root || root->val == val) return root;
+    if (val < root->val) return searchBST(root->left, val);
+    return searchBST(root->right, val);
 }
 
 int rangeSumBST(TreeNode* root, int low, int high) {
-    // TODO: Implement range sum
-    return 0;
+    if (!root) return 0;
+    int sum = 0;
+    if (root->val >= low && root->val <= high) sum += root->val;
+    if (root->val > low) sum += rangeSumBST(root->left, low, high);
+    if (root->val < high) sum += rangeSumBST(root->right, low, high);
+    return sum;
 }
 
 int main() {

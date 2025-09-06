@@ -126,18 +126,30 @@ public class Template {
     
     // Common BST operations
     public static TreeNode sortedArrayToBST(int[] nums) {
-        // TODO: Implement sorted array to BST
-        return null;
+        return sortedArrayToBSTHelper(nums, 0, nums.length - 1);
+    }
+    private static TreeNode sortedArrayToBSTHelper(int[] nums, int left, int right) {
+        if (left > right) return null;
+        int mid = left + (right - left) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = sortedArrayToBSTHelper(nums, left, mid - 1);
+        node.right = sortedArrayToBSTHelper(nums, mid + 1, right);
+        return node;
     }
     
     public static TreeNode searchBST(TreeNode root, int val) {
-        // TODO: Implement BST search
-        return null;
+    if (root == null || root.val == val) return root;
+    if (val < root.val) return searchBST(root.left, val);
+    return searchBST(root.right, val);
     }
     
     public static int rangeSumBST(TreeNode root, int low, int high) {
-        // TODO: Implement range sum
-        return 0;
+    if (root == null) return 0;
+    int sum = 0;
+    if (root.val >= low && root.val <= high) sum += root.val;
+    if (root.val > low) sum += rangeSumBST(root.left, low, high);
+    if (root.val < high) sum += rangeSumBST(root.right, low, high);
+    return sum;
     }
     
     public static void main(String[] args) {

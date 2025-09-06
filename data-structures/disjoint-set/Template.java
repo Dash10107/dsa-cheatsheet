@@ -60,18 +60,34 @@ public class Template {
     
     // Common disjoint set operations
     public static int countComponents(int n, int[][] edges) {
-        // TODO: Implement component counting
-        return 0;
+        DisjointSet ds = new DisjointSet(n);
+        for (int[] edge : edges) {
+            ds.union(edge[0], edge[1]);
+        }
+        return ds.getComponents();
     }
     
     public static boolean validTree(int n, int[][] edges) {
-        // TODO: Implement valid tree check
-        return false;
+        if (edges.length != n - 1) return false;
+        DisjointSet ds = new DisjointSet(n);
+        for (int[] edge : edges) {
+            if (ds.connected(edge[0], edge[1])) return false;
+            ds.union(edge[0], edge[1]);
+        }
+        return ds.getComponents() == 1;
     }
     
     public static int findCircleNum(int[][] isConnected) {
-        // TODO: Implement number of provinces
-        return 0;
+        int n = isConnected.length;
+        DisjointSet ds = new DisjointSet(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (isConnected[i][j] == 1) {
+                    ds.union(i, j);
+                }
+            }
+        }
+        return ds.getComponents();
     }
     
     public static void main(String[] args) {
