@@ -246,14 +246,30 @@ public:
 };
 
 // Common sliding window problems
+// LeetCode 239: Sliding Window Maximum
 vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-    // TODO: Implement sliding window maximum
-    return {};
+    vector<int> result;
+    deque<int> dq;
+    for (int i = 0; i < nums.size(); i++) {
+        while (!dq.empty() && dq.front() <= i - k) dq.pop_front();
+        while (!dq.empty() && nums[dq.back()] < nums[i]) dq.pop_back();
+        dq.push_back(i);
+        if (i >= k - 1) result.push_back(nums[dq.front()]);
+    }
+    return result;
 }
 
+// LeetCode 1004: Max Consecutive Ones III
 int longestOnes(vector<int>& nums, int k) {
-    // TODO: Implement max consecutive ones III
-    return 0;
+    int left = 0, maxLen = 0, zeros = 0;
+    for (int right = 0; right < nums.size(); right++) {
+        if (nums[right] == 0) zeros++;
+        while (zeros > k) {
+            if (nums[left++] == 0) zeros--;
+        }
+        maxLen = max(maxLen, right - left + 1);
+    }
+    return maxLen;
 }
 
 int main() {

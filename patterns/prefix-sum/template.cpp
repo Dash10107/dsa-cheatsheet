@@ -211,14 +211,35 @@ public:
 };
 
 // Common prefix sum problems
+// LeetCode 525: Contiguous Array (findMaxLength)
 int findMaxLength(vector<int>& nums) {
-    // TODO: Implement contiguous array
-    return 0;
+    unordered_map<int, int> map;
+    map[0] = -1;
+    int maxLen = 0, count = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        count += nums[i] == 1 ? 1 : -1;
+        if (map.count(count)) {
+            maxLen = max(maxLen, i - map[count]);
+        } else {
+            map[count] = i;
+        }
+    }
+    return maxLen;
 }
 
+// LeetCode 560: Subarray Sum Equals K
 int subarraySum(vector<int>& nums, int k) {
-    // TODO: Implement subarray sum equals K
-    return 0;
+    unordered_map<int, int> prefixCount;
+    prefixCount[0] = 1;
+    int count = 0, prefixSum = 0;
+    for (int num : nums) {
+        prefixSum += num;
+        if (prefixCount.count(prefixSum - k)) {
+            count += prefixCount[prefixSum - k];
+        }
+        prefixCount[prefixSum]++;
+    }
+    return count;
 }
 
 int main() {
