@@ -166,22 +166,74 @@ public:
 
 // Common linked list operations
 ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-    // TODO: Implement merge two sorted lists
-    return nullptr;
+    ListNode dummy(0);
+    ListNode* curr = &dummy;
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            curr->next = l1;
+            l1 = l1->next;
+        } else {
+            curr->next = l2;
+            l2 = l2->next;
+        }
+        curr = curr->next;
+    }
+    curr->next = l1 ? l1 : l2;
+    return dummy.next;
 }
 
 ListNode* removeNthFromEnd(ListNode* head, int n) {
-    // TODO: Implement remove nth from end
-    return nullptr;
+    ListNode dummy(0);
+    dummy.next = head;
+    ListNode* fast = &dummy;
+    ListNode* slow = &dummy;
+    for (int i = 0; i < n; ++i) {
+        if (!fast->next) return head;
+        fast = fast->next;
+    }
+    while (fast->next) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+    ListNode* toDelete = slow->next;
+    if (toDelete) slow->next = toDelete->next;
+    delete toDelete;
+    return dummy.next;
 }
 
 ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-    // TODO: Implement add two numbers
-    return nullptr;
+    ListNode dummy(0);
+    ListNode* curr = &dummy;
+    int carry = 0;
+    while (l1 || l2 || carry) {
+        int v1 = l1 ? l1->val : 0;
+        int v2 = l2 ? l2->val : 0;
+        int sum = v1 + v2 + carry;
+        carry = sum / 10;
+        curr->next = new ListNode(sum % 10);
+        curr = curr->next;
+        if (l1) l1 = l1->next;
+        if (l2) l2 = l2->next;
+    }
+    return dummy.next;
 }
 
 ListNode* detectCycle(ListNode* head) {
-    // TODO: Implement cycle detection
+    if (!head || !head->next) return nullptr;
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            ListNode* entry = head;
+            while (entry != slow) {
+                entry = entry->next;
+                slow = slow->next;
+            }
+            return entry;
+        }
+    }
     return nullptr;
 }
 

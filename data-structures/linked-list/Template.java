@@ -163,22 +163,70 @@ public class Template {
     
     // Common linked list operations
     public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        // TODO: Implement merge two sorted lists
-        return null;
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        curr.next = (l1 != null) ? l1 : l2;
+        return dummy.next;
     }
     
     public static ListNode removeNthFromEnd(ListNode head, int n) {
-        // TODO: Implement remove nth from end
-        return null;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode fast = dummy, slow = dummy;
+        for (int i = 0; i < n; i++) {
+            if (fast.next == null) return head;
+            fast = fast.next;
+        }
+        while (fast.next != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return dummy.next;
     }
     
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        // TODO: Implement add two numbers
-        return null;
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int v1 = (l1 != null) ? l1.val : 0;
+            int v2 = (l2 != null) ? l2.val : 0;
+            int sum = v1 + v2 + carry;
+            carry = sum / 10;
+            curr.next = new ListNode(sum % 10);
+            curr = curr.next;
+            if (l1 != null) l1 = l1.next;
+            if (l2 != null) l2 = l2.next;
+        }
+        return dummy.next;
     }
     
     public static ListNode detectCycle(ListNode head) {
-        // TODO: Implement cycle detection
+        if (head == null || head.next == null) return null;
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                ListNode entry = head;
+                while (entry != slow) {
+                    entry = entry.next;
+                    slow = slow.next;
+                }
+                return entry;
+            }
+        }
         return null;
     }
     
