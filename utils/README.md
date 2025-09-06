@@ -4,6 +4,7 @@ This directory contains utility functions and helper modules that are commonly u
 
 ## 📁 Files
 
+
 ### `gcd_lcm.py`
 Contains functions for:
 - **Greatest Common Divisor (GCD)**: Find GCD of two or more numbers
@@ -17,6 +18,27 @@ Contains functions for:
 - **Modular Inverse**: Find modular multiplicative inverse
 - **Prime Number Operations**: Check primality, generate primes
 - **Number Theory Utilities**: Totient function, factorization
+
+### `bit_utils.py`
+Contains functions for:
+- **Bit Manipulation**: Count set bits, check/set/unset/toggle bits, lowest/highest set bit, bit length, power of two checks
+
+### `combinatorics.py`
+Contains functions for:
+- **Combinatorics**: Factorial, nCr, nPr, modular nCr, binomial coefficients, Catalan numbers
+
+---
+
+## 🚀 Further Expansion Ideas
+
+- **Array Utilities**: Rotate, reverse, prefix/suffix min/max, etc.
+- **Matrix Utilities**: Transpose, rotate, identity, multiplication, power
+- **String Utilities**: KMP prefix function, Z-algorithm, palindrome check, etc.
+- **Geometry Basics**: Distance, orientation, area, convex hull stub
+- **Randomized Utilities**: Random shuffle, Fisher-Yates, random int
+- **Disjoint Set/Union-Find**: If not already in DSA core
+
+Contributions and suggestions welcome to make this a complete DSA toolkit!
 
 ## 🎯 Common Use Cases
 

@@ -273,19 +273,57 @@ public:
 };
 
 // Common two pointers problems
+// LeetCode 18: Four Sum
 vector<vector<int>> fourSum(vector<int>& nums, int target) {
-    // TODO: Implement four sum
-    return {};
+    vector<vector<int>> result;
+    sort(nums.begin(), nums.end());
+    int n = nums.size();
+    for (int i = 0; i < n - 3; i++) {
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
+        for (int j = i + 1; j < n - 2; j++) {
+            if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+            int left = j + 1, right = n - 1;
+            while (left < right) {
+                long long sum = (long long)nums[i] + nums[j] + nums[left] + nums[right];
+                if (sum == target) {
+                    result.push_back({nums[i], nums[j], nums[left], nums[right]});
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
+                    left++;
+                    right--;
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+    }
+    return result;
 }
 
+// LeetCode 845: Longest Mountain in Array
 int longestMountain(vector<int>& arr) {
-    // TODO: Implement longest mountain
-    return 0;
+    int n = arr.size(), maxLen = 0;
+    for (int i = 1; i < n - 1; i++) {
+        if (arr[i] > arr[i - 1] && arr[i] > arr[i + 1]) {
+            int left = i, right = i;
+            while (left > 0 && arr[left] > arr[left - 1]) left--;
+            while (right < n - 1 && arr[right] > arr[right + 1]) right++;
+            maxLen = max(maxLen, right - left + 1);
+        }
+    }
+    return maxLen;
 }
 
+// LeetCode 392: Is Subsequence
 bool isSubsequence(string s, string t) {
-    // TODO: Implement is subsequence
-    return false;
+    int i = 0, j = 0;
+    while (i < s.length() && j < t.length()) {
+        if (s[i] == t[j]) i++;
+        j++;
+    }
+    return i == s.length();
 }
 
 int main() {
