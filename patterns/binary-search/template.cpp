@@ -205,13 +205,46 @@ public:
 };
 
 // Common binary search problems
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
 int findKthSmallest(vector<vector<int>>& matrix, int k) {
-    // TODO: Implement kth smallest in sorted matrix
-    return 0;
+    int n = matrix.size();
+    int left = matrix[0][0], right = matrix[n - 1][n - 1];
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+        int count = 0, j = n - 1;
+        for (int i = 0; i < n; i++) {
+            while (j >= 0 && matrix[i][j] > mid) j--;
+            count += (j + 1);
+        }
+        if (count < k) left = mid + 1;
+        else right = mid;
+    }
+    return left;
 }
 
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-    // TODO: Implement median of two sorted arrays
+    if (nums1.size() > nums2.size()) return findMedianSortedArrays(nums2, nums1);
+    int m = nums1.size(), n = nums2.size();
+    int left = 0, right = m;
+    while (left <= right) {
+        int i = (left + right) / 2;
+        int j = (m + n + 1) / 2 - i;
+        int maxLeftA = (i == 0) ? INT_MIN : nums1[i - 1];
+        int minRightA = (i == m) ? INT_MAX : nums1[i];
+        int maxLeftB = (j == 0) ? INT_MIN : nums2[j - 1];
+        int minRightB = (j == n) ? INT_MAX : nums2[j];
+        if (maxLeftA <= minRightB && maxLeftB <= minRightA) {
+            if ((m + n) % 2 == 0) {
+                return (max(maxLeftA, maxLeftB) + min(minRightA, minRightB)) / 2.0;
+            } else {
+                return max(maxLeftA, maxLeftB);
+            }
+        } else if (maxLeftA > minRightB) {
+            right = i - 1;
+        } else {
+            left = i + 1;
+        }
+    }
     return 0.0;
 }
 

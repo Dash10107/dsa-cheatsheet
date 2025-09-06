@@ -210,14 +210,59 @@ public:
 };
 
 // Common backtracking problems
+bool isValidSudoku(vector<vector<char>>& board, int row, int col, char c) {
+    for (int i = 0; i < 9; i++) {
+        if (board[i][col] == c) return false;
+        if (board[row][i] == c) return false;
+        if (board[3 * (row / 3) + i / 3][3 * (col / 3) + i % 3] == c) return false;
+    }
+    return true;
+}
+
 bool solveSudoku(vector<vector<char>>& board) {
-    // TODO: Implement Sudoku solver
-    return false;
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (board[i][j] == '.') {
+                for (char c = '1'; c <= '9'; c++) {
+                    if (isValidSudoku(board, i, j, c)) {
+                        board[i][j] = c;
+                        if (solveSudoku(board)) return true;
+                        board[i][j] = '.';
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool dfsWordSearch(vector<vector<char>>& board, int i, int j, string& word, int idx) {
+    if (idx == word.size()) return true;
+    if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || board[i][j] != word[idx]) return false;
+    char temp = board[i][j];
+    board[i][j] = '#';
+    bool found = dfsWordSearch(board, i + 1, j, word, idx + 1) ||
+                 dfsWordSearch(board, i - 1, j, word, idx + 1) ||
+                 dfsWordSearch(board, i, j + 1, word, idx + 1) ||
+                 dfsWordSearch(board, i, j - 1, word, idx + 1);
+    board[i][j] = temp;
+    return found;
 }
 
 vector<string> wordSearchII(vector<vector<char>>& board, vector<string>& words) {
-    // TODO: Implement word search II
-    return {};
+    set<string> result;
+    int m = board.size(), n = board[0].size();
+    for (string& word : words) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dfsWordSearch(board, i, j, word, 0)) {
+                    result.insert(word);
+                }
+            }
+        }
+    }
+    return vector<string>(result.begin(), result.end());
 }
 
 int main() {
