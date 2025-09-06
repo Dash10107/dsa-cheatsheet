@@ -39,13 +39,24 @@ Arrays are a fundamental data structure that stores elements of the same type in
 
 ## 🎯 Common Problems
 
-1. **Two Sum**
-2. **Maximum Subarray Sum**
-3. **Rotate Array**
-4. **Find Peak Element**
-5. **Product of Array Except Self**
-6. **Spiral Matrix**
-7. **Merge Intervals**
+
+### LeetCode Problems
+
+- [Two Sum](https://leetcode.com/problems/two-sum/)
+- [Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+- [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
+- [Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)
+- [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
+- [Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+- [Rotate Array](https://leetcode.com/problems/rotate-array/)
+- [Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number/)
+- [Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)
+- [Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/)
+- [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+- [Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/)
+- [Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
+- [Move Zeroes](https://leetcode.com/problems/move-zeroes/)
+- [Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
 
 ## 💡 Key Insights
 

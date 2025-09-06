@@ -84,18 +84,41 @@ public class Template {
     
     // Common array operations
     public static int[] twoSum(int[] nums, int target) {
-        // TODO: Implement two sum
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[]{map.get(complement), i};
+            }
+            map.put(nums[i], i);
+        }
         return new int[0];
     }
     
     public static int maxSubarray(int[] nums) {
-        // TODO: Implement Kadane's algorithm
-        return 0;
+        int maxSum = nums[0];
+        int currSum = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            currSum = Math.max(nums[i], currSum + nums[i]);
+            maxSum = Math.max(maxSum, currSum);
+        }
+        return maxSum;
     }
     
     public static int[] productExceptSelf(int[] nums) {
-        // TODO: Implement product except self
-        return new int[0];
+        int n = nums.length;
+        int[] output = new int[n];
+        int left = 1;
+        for (int i = 0; i < n; i++) {
+            output[i] = left;
+            left *= nums[i];
+        }
+        int right = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            output[i] *= right;
+            right *= nums[i];
+        }
+        return output;
     }
     
     public static void main(String[] args) {

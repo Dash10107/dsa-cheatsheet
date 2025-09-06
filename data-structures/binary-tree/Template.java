@@ -125,18 +125,30 @@ public class Template {
     
     // Common tree operations
     public static boolean isSameTree(TreeNode p, TreeNode q) {
-        // TODO: Implement same tree check
-        return false;
+    if (p == null && q == null) return true;
+    if (p == null || q == null) return false;
+    if (p.val != q.val) return false;
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
     
     public static boolean isSymmetric(TreeNode root) {
-        // TODO: Implement symmetric tree check
-        return false;
+        if (root == null) return true;
+        return isMirror(root.left, root.right);
+    }
+    private static boolean isMirror(TreeNode left, TreeNode right) {
+        if (left == null && right == null) return true;
+        if (left == null || right == null) return false;
+        if (left.val != right.val) return false;
+        return isMirror(left.left, right.right) && isMirror(left.right, right.left);
     }
     
     public static TreeNode invertTree(TreeNode root) {
-        // TODO: Implement tree inversion
-        return null;
+    if (root == null) return null;
+    TreeNode left = invertTree(root.left);
+    TreeNode right = invertTree(root.right);
+    root.left = right;
+    root.right = left;
+    return root;
     }
     
     public static void main(String[] args) {

@@ -139,6 +139,33 @@ TreeNode* invertTree(TreeNode* root) {
     // TODO: Implement tree inversion
     return nullptr;
 }
+bool isSameTree(TreeNode* p, TreeNode* q) {
+    if (!p && !q) return true;
+    if (!p || !q) return false;
+    if (p->val != q->val) return false;
+    return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+}
+
+bool isMirror(TreeNode* left, TreeNode* right) {
+    if (!left && !right) return true;
+    if (!left || !right) return false;
+    if (left->val != right->val) return false;
+    return isMirror(left->left, right->right) && isMirror(left->right, right->left);
+}
+
+bool isSymmetric(TreeNode* root) {
+    if (!root) return true;
+    return isMirror(root->left, root->right);
+}
+
+TreeNode* invertTree(TreeNode* root) {
+    if (!root) return nullptr;
+    TreeNode* left = invertTree(root->left);
+    TreeNode* right = invertTree(root->right);
+    root->left = right;
+    root->right = left;
+    return root;
+}
 
 int main() {
     BinaryTree tree;

@@ -53,10 +53,23 @@ class UnionFindWithPathCompression:
 
 # Common union-find operations
 def find_circle_num(is_connected):
-    pass
+    """Number of connected components in an undirected graph (LeetCode 547)."""
+    n = len(is_connected)
+    uf = UnionFind(n)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if is_connected[i][j]:
+                uf.union(i, j)
+    return uf.count_components()
 
 def find_redundant_connection(edges):
-    pass
+    """Find the redundant edge that creates a cycle (LeetCode 684)."""
+    n = len(edges)
+    uf = UnionFind(n + 1)
+    for u, v in edges:
+        if not uf.union(u - 1, v - 1):
+            return [u, v]
+    return []
 
 def accounts_merge(accounts):
     pass

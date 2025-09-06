@@ -63,18 +63,41 @@ public:
 
 // Common array operations
 vector<int> twoSum(vector<int>& nums, int target) {
-    // TODO: Implement two sum
+    unordered_map<int, int> map;
+    for (int i = 0; i < nums.size(); ++i) {
+        int complement = target - nums[i];
+        if (map.count(complement)) {
+            return {map[complement], i};
+        }
+        map[nums[i]] = i;
+    }
     return {};
 }
 
 int maxSubarray(vector<int>& nums) {
-    // TODO: Implement Kadane's algorithm
-    return 0;
+    int maxSum = nums[0];
+    int currSum = nums[0];
+    for (int i = 1; i < nums.size(); ++i) {
+        currSum = max(nums[i], currSum + nums[i]);
+        maxSum = max(maxSum, currSum);
+    }
+    return maxSum;
 }
 
 vector<int> productExceptSelf(vector<int>& nums) {
-    // TODO: Implement product except self
-    return {};
+    int n = nums.size();
+    vector<int> output(n, 1);
+    int left = 1;
+    for (int i = 0; i < n; ++i) {
+        output[i] = left;
+        left *= nums[i];
+    }
+    int right = 1;
+    for (int i = n - 1; i >= 0; --i) {
+        output[i] *= right;
+        right *= nums[i];
+    }
+    return output;
 }
 
 int main() {
