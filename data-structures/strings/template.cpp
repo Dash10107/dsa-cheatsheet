@@ -160,23 +160,86 @@ public:
 
 // Common string problems
 string longestPalindrome(string s) {
-    // TODO: Implement longest palindromic substring
-    return "";
+    int n = s.size(), start = 0, maxLen = 1;
+    if (n < 2) return s;
+    vector<vector<bool>> dp(n, vector<bool>(n, false));
+    for (int i = 0; i < n; ++i) dp[i][i] = true;
+    for (int l = 2; l <= n; ++l) {
+        for (int i = 0; i <= n - l; ++i) {
+            int j = i + l - 1;
+            if (s[i] == s[j]) {
+                if (l == 2 || dp[i + 1][j - 1]) {
+                    dp[i][j] = true;
+                    if (l > maxLen) {
+                        start = i;
+                        maxLen = l;
+                    }
+                }
+            }
+        }
+    }
+    return s.substr(start, maxLen);
 }
 
 string minWindow(string s, string t) {
-    // TODO: Implement minimum window substring
-    return "";
+    unordered_map<char, int> dictT;
+    for (char c : t) dictT[c]++;
+    int required = dictT.size(), formed = 0, l = 0, r = 0, minLen = INT_MAX, minStart = 0;
+    unordered_map<char, int> windowCounts;
+    while (r < s.size()) {
+        char c = s[r++];
+        windowCounts[c]++;
+        if (dictT.count(c) && windowCounts[c] == dictT[c]) formed++;
+        while (formed == required) {
+            if (r - l < minLen) {
+                minLen = r - l;
+                minStart = l;
+            }
+            char cl = s[l++];
+            windowCounts[cl]--;
+            if (dictT.count(cl) && windowCounts[cl] < dictT[cl]) formed--;
+        }
+    }
+    return minLen == INT_MAX ? "" : s.substr(minStart, minLen);
 }
 
-vector<string> groupAnagrams(vector<string>& strs) {
-    // TODO: Implement group anagrams
-    return {};
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>> mp;
+    for (string& word : strs) {
+        string key = word;
+        sort(key.begin(), key.end());
+        mp[key].push_back(word);
+    }
+    vector<vector<string>> res;
+    for (auto& p : mp) res.push_back(p.second);
+    return res;
 }
 
 string decodeString(string s) {
-    // TODO: Implement decode string
-    return "";
+    stack<int> counts;
+    stack<string> result;
+    string res = "";
+    int idx = 0;
+    while (idx < s.size()) {
+        if (isdigit(s[idx])) {
+            int count = 0;
+            while (isdigit(s[idx])) count = 10 * count + (s[idx++] - '0');
+            counts.push(count);
+        } else if (s[idx] == '[') {
+            result.push(res);
+            res = "";
+            idx++;
+        } else if (s[idx] == ']') {
+            string temp = result.top(); result.pop();
+            int repeatTimes = counts.top(); counts.pop();
+            for (int i = 0; i < repeatTimes; ++i) temp += res;
+            res = temp;
+            idx++;
+        } else {
+            res += s[idx++];
+        }
+    }
+    return res;
 }
 
 int main() {

@@ -180,18 +180,32 @@ public class Template {
     
     // Common queue operations
     public static int[] slidingWindowMaximum(int[] nums, int k) {
-        // TODO: Implement sliding window maximum
-        return new int[0];
+        if (nums == null || k == 0) return new int[0];
+        int n = nums.length;
+        int[] res = new int[n - k + 1];
+        Deque<Integer> dq = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            while (!dq.isEmpty() && dq.peekFirst() <= i - k) dq.pollFirst();
+            while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i]) dq.pollLast();
+            dq.offerLast(i);
+            if (i >= k - 1) res[i - k + 1] = nums[dq.peekFirst()];
+        }
+        return res;
     }
     
     public static int firstNonRepeatingChar(String s) {
-        // TODO: Implement first non-repeating character
-        return -1;
+        int[] count = new int[256];
+        Queue<Character> q = new LinkedList<>();
+        for (char c : s.toCharArray()) {
+            count[c]++;
+            q.offer(c);
+            while (!q.isEmpty() && count[q.peek()] > 1) q.poll();
+        }
+        return q.isEmpty() ? -1 : s.indexOf(q.peek());
     }
     
     public static int[] maxSlidingWindow(int[] nums, int k) {
-        // TODO: Implement max sliding window
-        return new int[0];
+    return slidingWindowMaximum(nums, k);
     }
     
     public static void main(String[] args) {

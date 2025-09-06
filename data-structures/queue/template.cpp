@@ -178,18 +178,30 @@ public:
 
 // Common queue operations
 vector<int> slidingWindowMaximum(vector<int>& nums, int k) {
-    // TODO: Implement sliding window maximum
-    return {};
+    deque<int> dq;
+    vector<int> res;
+    for (int i = 0; i < nums.size(); ++i) {
+        while (!dq.empty() && dq.front() <= i - k) dq.pop_front();
+        while (!dq.empty() && nums[dq.back()] < nums[i]) dq.pop_back();
+        dq.push_back(i);
+        if (i >= k - 1) res.push_back(nums[dq.front()]);
+    }
+    return res;
 }
 
 int firstNonRepeatingChar(string s) {
-    // TODO: Implement first non-repeating character
-    return -1;
+    vector<int> count(256, 0);
+    queue<char> q;
+    for (char c : s) {
+        count[c]++;
+        q.push(c);
+        while (!q.empty() && count[q.front()] > 1) q.pop();
+    }
+    return q.empty() ? -1 : s.find(q.front());
 }
 
 vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-    // TODO: Implement max sliding window
-    return {};
+    return slidingWindowMaximum(nums, k);
 }
 
 int main() {

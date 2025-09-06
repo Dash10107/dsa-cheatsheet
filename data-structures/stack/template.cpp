@@ -70,38 +70,106 @@ public:
 
 // Common stack operations
 bool isValidParentheses(string s) {
-    // TODO: Implement valid parentheses
-    return false;
+    stack<char> st;
+    unordered_map<char, char> mp = {{')', '('}, {'}', '{'}, {']', '['}};
+    for (char c : s) {
+        if (mp.count(c)) {
+            if (st.empty() || st.top() != mp[c]) return false;
+            st.pop();
+        } else if (c == '(' || c == '{' || c == '[') {
+            st.push(c);
+        }
+    }
+    return st.empty();
 }
 
 vector<int> nextGreaterElement(vector<int>& nums) {
-    // TODO: Implement next greater element
-    return {};
+    int n = nums.size();
+    vector<int> res(n, -1);
+    stack<int> st;
+    for (int i = n - 1; i >= 0; --i) {
+        while (!st.empty() && st.top() <= nums[i]) st.pop();
+        if (!st.empty()) res[i] = st.top();
+        st.push(nums[i]);
+    }
+    return res;
 }
 
 int largestRectangleArea(vector<int>& heights) {
-    // TODO: Implement largest rectangle in histogram
-    return 0;
+    stack<int> st;
+    int maxArea = 0, n = heights.size();
+    for (int i = 0; i <= n; ++i) {
+        int h = (i == n) ? 0 : heights[i];
+        while (!st.empty() && h < heights[st.top()]) {
+            int height = heights[st.top()]; st.pop();
+            int width = st.empty() ? i : i - st.top() - 1;
+            maxArea = max(maxArea, height * width);
+        }
+        st.push(i);
+    }
+    return maxArea;
 }
 
 vector<int> dailyTemperatures(vector<int>& temperatures) {
-    // TODO: Implement daily temperatures
-    return {};
+    int n = temperatures.size();
+    vector<int> res(n, 0);
+    stack<int> st;
+    for (int i = 0; i < n; ++i) {
+        while (!st.empty() && temperatures[i] > temperatures[st.top()]) {
+            int idx = st.top(); st.pop();
+            res[idx] = i - idx;
+        }
+        st.push(i);
+    }
+    return res;
 }
 
 string removeDuplicates(string s) {
-    // TODO: Implement remove adjacent duplicates
-    return "";
+    stack<char> st;
+    for (char c : s) {
+        if (!st.empty() && st.top() == c) st.pop();
+        else st.push(c);
+    }
+    string res;
+    while (!st.empty()) { res = st.top() + res; st.pop(); }
+    return res;
 }
 
 int evaluatePostfix(string expression) {
-    // TODO: Implement postfix evaluation
-    return 0;
+    stack<int> st;
+    string token;
+    istringstream iss(expression);
+    while (iss >> token) {
+        if (token == "+" || token == "-" || token == "*" || token == "/") {
+            int b = st.top(); st.pop();
+            int a = st.top(); st.pop();
+            if (token == "+") st.push(a + b);
+            else if (token == "-") st.push(a - b);
+            else if (token == "*") st.push(a * b);
+            else if (token == "/") st.push(a / b);
+        } else {
+            st.push(stoi(token));
+        }
+    }
+    return st.empty() ? 0 : st.top();
 }
 
 vector<int> asteroidCollision(vector<int>& asteroids) {
-    // TODO: Implement asteroid collision
-    return {};
+    stack<int> st;
+    for (int a : asteroids) {
+        bool alive = true;
+        while (alive && a < 0 && !st.empty() && st.top() > 0) {
+            if (st.top() < -a) st.pop();
+            else if (st.top() == -a) { st.pop(); alive = false; }
+            else { alive = false; }
+        }
+        if (alive) st.push(a);
+    }
+    vector<int> res(st.size());
+    for (int i = st.size() - 1; i >= 0; --i) {
+        res[i] = st.top(); st.pop();
+    }
+    return res;
 }
 
 int main() {

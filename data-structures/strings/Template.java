@@ -137,23 +137,99 @@ public class Template {
     
     // Common string problems
     public static String longestPalindrome(String s) {
-        // TODO: Implement longest palindromic substring
-        return "";
+        if (s == null || s.length() < 1) return "";
+        int start = 0, end = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandAroundCenter(s, i, i);
+            int len2 = expandAroundCenter(s, i, i + 1);
+            int len = Math.max(len1, len2);
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
+            }
+        }
+        return s.substring(start, end + 1);
     }
-    
+
+    private static int expandAroundCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+
     public static String minWindow(String s, String t) {
-        // TODO: Implement minimum window substring
-        return "";
+        if (s.length() == 0 || t.length() == 0) return "";
+        Map<Character, Integer> dictT = new HashMap<>();
+        for (char c : t.toCharArray()) dictT.put(c, dictT.getOrDefault(c, 0) + 1);
+        int required = dictT.size();
+        int l = 0, r = 0, formed = 0;
+        Map<Character, Integer> windowCounts = new HashMap<>();
+        int[] ans = {-1, 0, 0};
+        while (r < s.length()) {
+            char c = s.charAt(r);
+            windowCounts.put(c, windowCounts.getOrDefault(c, 0) + 1);
+            if (dictT.containsKey(c) && windowCounts.get(c).intValue() == dictT.get(c).intValue()) {
+                formed++;
+            }
+            while (l <= r && formed == required) {
+                c = s.charAt(l);
+                if (ans[0] == -1 || r - l + 1 < ans[0]) {
+                    ans[0] = r - l + 1;
+                    ans[1] = l;
+                    ans[2] = r;
+                }
+                windowCounts.put(c, windowCounts.get(c) - 1);
+                if (dictT.containsKey(c) && windowCounts.get(c).intValue() < dictT.get(c).intValue()) {
+                    formed--;
+                }
+                l++;
+            }
+            r++;
+        }
+        return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
     }
-    
+
     public static List<List<String>> groupAnagrams(String[] strs) {
-        // TODO: Implement group anagrams
-        return new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : strs) {
+            char[] arr = s.toCharArray();
+            Arrays.sort(arr);
+            String key = new String(arr);
+            map.computeIfAbsent(key, k -> new ArrayList<>()).add(s);
+        }
+        return new ArrayList<>(map.values());
     }
-    
+
     public static String decodeString(String s) {
-        // TODO: Implement decode string
-        return "";
+        Stack<Integer> counts = new Stack<>();
+        Stack<String> result = new Stack<>();
+        String res = "";
+        int idx = 0;
+        while (idx < s.length()) {
+            if (Character.isDigit(s.charAt(idx))) {
+                int count = 0;
+                while (Character.isDigit(s.charAt(idx))) {
+                    count = 10 * count + (s.charAt(idx++) - '0');
+                }
+                counts.push(count);
+            } else if (s.charAt(idx) == '[') {
+                result.push(res);
+                res = "";
+                idx++;
+            } else if (s.charAt(idx) == ']') {
+                String temp = result.pop();
+                int repeatTimes = counts.pop();
+                StringBuilder sb = new StringBuilder(temp);
+                for (int i = 0; i < repeatTimes; i++) sb.append(res);
+                res = sb.toString();
+                idx++;
+            } else {
+                res += s.charAt(idx++);
+            }
+        }
+        return res;
     }
     
     public static void main(String[] args) {

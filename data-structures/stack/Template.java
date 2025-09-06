@@ -68,38 +68,110 @@ public class Template {
     
     // Common stack operations
     public static boolean isValidParentheses(String s) {
-        // TODO: Implement valid parentheses
-        return false;
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put('}', '{');
+        map.put(']', '[');
+        for (char c : s.toCharArray()) {
+            if (map.containsValue(c)) {
+                stack.push(c);
+            } else if (map.containsKey(c)) {
+                if (stack.isEmpty() || stack.pop() != map.get(c)) return false;
+            }
+        }
+        return stack.isEmpty();
     }
-    
+
     public static int[] nextGreaterElement(int[] nums) {
-        // TODO: Implement next greater element
-        return new int[0];
+        int n = nums.length;
+        int[] res = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && stack.peek() <= nums[i]) stack.pop();
+            res[i] = stack.isEmpty() ? -1 : stack.peek();
+            stack.push(nums[i]);
+        }
+        return res;
     }
-    
+
     public static int largestRectangleArea(int[] heights) {
-        // TODO: Implement largest rectangle in histogram
-        return 0;
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        int n = heights.length;
+        for (int i = 0; i <= n; i++) {
+            int h = (i == n) ? 0 : heights[i];
+            while (!stack.isEmpty() && h < heights[stack.peek()]) {
+                int height = heights[stack.pop()];
+                int width = stack.isEmpty() ? i : i - stack.peek() - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            stack.push(i);
+        }
+        return maxArea;
     }
-    
+
     public static int[] dailyTemperatures(int[] temperatures) {
-        // TODO: Implement daily temperatures
-        return new int[0];
+        int n = temperatures.length;
+        int[] res = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
+                int idx = stack.pop();
+                res[idx] = i - idx;
+            }
+            stack.push(i);
+        }
+        return res;
     }
-    
+
     public static String removeDuplicates(String s) {
-        // TODO: Implement remove adjacent duplicates
-        return "";
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && stack.peek() == c) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (char c : stack) sb.append(c);
+        return sb.toString();
     }
-    
+
     public static int evaluatePostfix(String expression) {
-        // TODO: Implement postfix evaluation
-        return 0;
+        Stack<Integer> stack = new Stack<>();
+        String[] tokens = expression.split(" ");
+        for (String token : tokens) {
+            if (token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/")) {
+                int b = stack.pop();
+                int a = stack.pop();
+                switch (token) {
+                    case "+": stack.push(a + b); break;
+                    case "-": stack.push(a - b); break;
+                    case "*": stack.push(a * b); break;
+                    case "/": stack.push(a / b); break;
+                }
+            } else {
+                stack.push(Integer.parseInt(token));
+            }
+        }
+        return stack.isEmpty() ? 0 : stack.pop();
     }
-    
+
     public static int[] asteroidCollision(int[] asteroids) {
-        // TODO: Implement asteroid collision
-        return new int[0];
+        Stack<Integer> stack = new Stack<>();
+        for (int a : asteroids) {
+            while (!stack.isEmpty() && a < 0 && stack.peek() > 0) {
+                if (stack.peek() < -a) stack.pop();
+                else if (stack.peek() == -a) { stack.pop(); a = 0; }
+                else { a = 0; }
+            }
+            if (a != 0) stack.push(a);
+        }
+        int[] res = new int[stack.size()];
+        for (int i = res.length - 1; i >= 0; i--) res[i] = stack.pop();
+        return res;
     }
     
     public static void main(String[] args) {

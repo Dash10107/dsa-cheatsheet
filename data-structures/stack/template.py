@@ -50,13 +50,44 @@ class MinStack:
 
 # Common stack operations
 def valid_parentheses(s):
-    pass
+    stack = []
+    mapping = {')': '(', '}': '{', ']': '['}
+    for char in s:
+        if char in mapping.values():
+            stack.append(char)
+        elif char in mapping:
+            if not stack or stack[-1] != mapping[char]:
+                return False
+            stack.pop()
+    return not stack
 
 def daily_temperatures(temperatures):
-    pass
+    res = [0] * len(temperatures)
+    stack = []
+    for i, temp in enumerate(temperatures):
+        while stack and temperatures[stack[-1]] < temp:
+            idx = stack.pop()
+            res[idx] = i - idx
+        stack.append(i)
+    return res
 
 def evaluate_reverse_polish_notation(tokens):
-    pass
+    stack = []
+    for token in tokens:
+        if token in '+-*/':
+            b = stack.pop()
+            a = stack.pop()
+            if token == '+':
+                stack.append(a + b)
+            elif token == '-':
+                stack.append(a - b)
+            elif token == '*':
+                stack.append(a * b)
+            elif token == '/':
+                stack.append(int(a / b))
+        else:
+            stack.append(int(token))
+    return stack[0] if stack else 0
 
 def next_greater_element(nums1, nums2):
     pass
